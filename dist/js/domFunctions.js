@@ -1,10 +1,10 @@
-export const setPlaceHolderText = () => {
+export const setPlaceholderText = () => {
   const input = document.getElementById("searchBar__text");
-
   window.innerWidth < 400
-    ? (input.placeholder = "City, state,Country")
-    : (input.placeholder = "City, State,Country, or Zip Code");
+    ? (input.placeholder = "City, State, Country")
+    : (input.placeholder = "City, State, Country, or Zip Code");
 };
+
 export const addSpinner = (element) => {
   animateButton(element);
   setTimeout(animateButton, 1000, element);
@@ -26,13 +26,15 @@ export const displayApiError = (statusCode) => {
   updateWeatherLocationHeader(properMsg);
   updateScreenReaderConfirmation(`${properMsg}. Please try again.`);
 };
+
 const toProperCase = (text) => {
   const words = text.split(" ");
-  const propersWords = words.map((word) => {
+  const properWords = words.map((word) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
   });
-  return propersWords.join(" ");
+  return properWords.join(" ");
 };
+
 const updateWeatherLocationHeader = (message) => {
   const h1 = document.getElementById("currentForecast__location");
   if (message.indexOf("Lat:") !== -1 && message.indexOf("Long:") !== -1) {
@@ -46,9 +48,9 @@ const updateWeatherLocationHeader = (message) => {
         : mapArray[0].slice(0, 11);
     const lon =
       mapArray[1].indexOf("-") === -1
-        ? mapArray[1].slice(0, 10)
-        : mapArray[1].slice(0, 11);
-    h1.textContent = `${lat} . ${lon}`;
+        ? mapArray[1].slice(0, 11)
+        : mapArray[1].slice(0, 12);
+    h1.textContent = `${lat} • ${lon}`;
   } else {
     h1.textContent = message;
   }
@@ -59,7 +61,7 @@ export const updateScreenReaderConfirmation = (message) => {
 };
 
 export const updateDisplay = (weatherJson, locationObj) => {
-  fadeDispaly();
+  fadeDisplay();
   clearDisplay();
   const weatherClass = getWeatherClass(weatherJson.current.weather[0].icon);
   setBGImage(weatherClass);
@@ -69,18 +71,18 @@ export const updateDisplay = (weatherJson, locationObj) => {
   );
   updateScreenReaderConfirmation(screenReaderWeather);
   updateWeatherLocationHeader(locationObj.getName());
-  //current conditions
+  // current conditions
   const ccArray = createCurrentConditionsDivs(
     weatherJson,
     locationObj.getUnit()
   );
   displayCurrentConditions(ccArray);
-  //six day forecast
   displaySixDayForecast(weatherJson);
   setFocusOnSearch();
-  fadeDispaly();
+  fadeDisplay();
 };
-const fadeDispaly = () => {
+
+const fadeDisplay = () => {
   const cc = document.getElementById("currentForecast");
   cc.classList.toggle("zero-vis");
   cc.classList.toggle("fade-in");
@@ -109,16 +111,16 @@ const deleteContents = (parentElement) => {
 const getWeatherClass = (icon) => {
   const firstTwoChars = icon.slice(0, 2);
   const lastChar = icon.slice(2);
-  const weahterLookup = {
+  const weatherLookup = {
     "09": "snow",
     10: "rain",
     11: "rain",
     13: "snow",
-    50: "fog",
+    50: "fog"
   };
   let weatherClass;
-  if (weahterLookup[firstTwoChars]) {
-    weatherClass = weahterLookup[firstTwoChars];
+  if (weatherLookup[firstTwoChars]) {
+    weatherClass = weatherLookup[firstTwoChars];
   } else if (lastChar === "d") {
     weatherClass = "clouds";
   } else {
@@ -137,8 +139,7 @@ const setBGImage = (weatherClass) => {
 const buildScreenReaderWeather = (weatherJson, locationObj) => {
   const location = locationObj.getName();
   const unit = locationObj.getUnit();
-
-  const tempUnit = unit === "imperial" ? "F" : "C";
+  const tempUnit = unit === "imperial" ? "Fahrenheit" : "Celsius";
   return `${weatherJson.current.weather[0].description} and ${Math.round(
     Number(weatherJson.current.temp)
   )}°${tempUnit} in ${location}`;
@@ -158,14 +159,15 @@ const createCurrentConditionsDivs = (weatherObj, unit) => {
   const temp = createElem(
     "div",
     "temp",
-    `${Math.round(Number(weatherObj.current.temp))}°`
+    `${Math.round(Number(weatherObj.current.temp))}°`,
+    tempUnit
   );
   const properDesc = toProperCase(weatherObj.current.weather[0].description);
   const desc = createElem("div", "desc", properDesc);
   const feels = createElem(
     "div",
     "feels",
-    `Feels like ${Math.round(Number(weatherObj.current.feels_like))}°`
+    `Feels Like ${Math.round(Number(weatherObj.current.feels_like))}°`
   );
   const maxTemp = createElem(
     "div",
@@ -200,15 +202,15 @@ const createMainImgDiv = (icon, altText) => {
   return iconDiv;
 };
 
-const createElem = (elemType, divClassname, divText, unit) => {
+const createElem = (elemType, divClassName, divText, unit) => {
   const div = document.createElement(elemType);
-  div.className = divClassname;
+  div.className = divClassName;
   if (divText) {
     div.textContent = divText;
   }
-  if (divClassname === "temp") {
+  if (divClassName === "temp") {
     const unitDiv = document.createElement("div");
-    unitDiv.classList.add("unit");
+    unitDiv.className = "unit";
     unitDiv.textContent = unit;
     div.appendChild(unitDiv);
   }
@@ -249,6 +251,7 @@ const translateIconToFontAwesome = (icon) => {
       } else {
         i.classList.add("fas", "fa-cloud-moon-rain");
       }
+      break;
     case "11":
       i.classList.add("fas", "fa-poo-storm");
       break;

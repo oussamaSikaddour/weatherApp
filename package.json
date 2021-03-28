@@ -1,5 +1,5 @@
 {
-  "name": "weahter_app-netlify",
+  "name": "weather_app_tut",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheOussama/weatherApp.git"
+    "url": "git+https://github.com/gitdagray/weather_app_tut.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TheOussama/weatherApp/issues"
+    "url": "https://github.com/gitdagray/weather_app_tut/issues"
   },
-  "homepage": "https://github.com/TheOussama/weatherApp#readme",
+  "homepage": "https://github.com/gitdagray/weather_app_tut#readme",
   "dependencies": {
     "node-fetch": "^2.6.1"
   }
